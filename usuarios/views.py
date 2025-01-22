@@ -62,9 +62,10 @@ def logar(request):
         if user is not None:
             login(request, user)
             messages.add_message(request, constants.SUCCESS, 'Usuário logado com sucesso.')
-            # Verificar se há um próximo URL e redirecionar para ele
-            next_url = request.GET.get('next', '/salas')  # Redireciona para salas ou para a página que o usuário tentou acessar
-            return redirect(next_url)
+        if user is not None:
+            login(request, user)
+            messages.add_message(request, constants.SUCCESS, 'Usuário logado com sucesso.')
+            return redirect( '/salas')
         else:
             messages.add_message(request, constants.ERROR, 'Usuário ou senha inválidos')
             return redirect('/usuarios/logar')
