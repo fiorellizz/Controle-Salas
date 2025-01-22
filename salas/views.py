@@ -4,15 +4,18 @@ from .forms import AgendamentoForm
 from .models import Agendamento
 from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='/usuarios/logar')
 def listar_salas(request):
     salas = Sala.objects.all()
     return render(request, 'salas/listar_salas.html', {'salas': salas})
 
+@login_required(login_url='/usuarios/logar')
 def detalhes_sala(request, sala_id):
     sala = get_object_or_404(Sala, id=sala_id)
     agendamentos = sala.agendamento_set.all()  # Agendamentos relacionados à sala
     return render(request, 'salas/detalhes_sala.html', {'sala': sala, 'agendamentos': agendamentos})
 
+@login_required(login_url='/usuarios/logar')
 def agendar_sala(request):
     if request.method == 'POST':
         form = AgendamentoForm(request.POST)
@@ -23,6 +26,7 @@ def agendar_sala(request):
         form = AgendamentoForm()
     return render(request, 'salas/agendar_sala.html', {'form': form})
 
+@login_required(login_url='/usuarios/logar')
 def listar_agendamentos(request):
     """
     Lista todos os agendamentos ordenados por data e horário de início.
@@ -30,7 +34,7 @@ def listar_agendamentos(request):
     agendamentos = Agendamento.objects.select_related('sala').order_by('data', 'horario_inicio')
     return render(request, 'salas/listar_agendamentos.html', {'agendamentos': agendamentos})
 
-
+@login_required(login_url='/usuarios/logar')
 def listar_meus_agendamentos(request):
     """
     Lista apenas os agendamentos do usuário autenticado.
@@ -44,7 +48,7 @@ def listar_meus_agendamentos(request):
     
     return render(request, 'salas/listar_meus_agendamentos.html', {'agendamentos': agendamentos})
 
-@login_required
+@login_required(login_url='/usuarios/logar')
 def editar_agendamento(request, pk):
     """
     Permite que o usuário edite um agendamento próprio.
@@ -58,8 +62,8 @@ def editar_agendamento(request, pk):
     else:
         form = AgendamentoForm(instance=agendamento)
     return render(request, 'salas/editar_agendamento.html', {'form': form})
-
-@login_required
+    
+@login_required(login_url='/usuarios/logar')
 def excluir_agendamento(request, pk):
     """
     Permite que o usuário exclua um agendamento próprio.
